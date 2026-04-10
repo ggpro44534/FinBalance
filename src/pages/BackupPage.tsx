@@ -1,8 +1,10 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
+
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
-import { exportBackup, isBackupPayload, restoreBackup } from "../services/backupService";
+import { backupService } from "../services/BackupService";
+import { useI18n } from "../i18n";
 
 type Status = { type: "success" | "error"; message: string } | null;
 
@@ -11,28 +13,30 @@ function downloadJson(filename: string, payload: unknown) {
   const blob = new Blob([text], { type: "application/json;charset=utf-8" });
   const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
 
   URL.revokeObjectURL(url);
 }
 
 export default function BackupPage() {
-  const [fileLabel, setFileLabel] = useState("Файл не вибрано");
+  const { t } = useI18n();
+  const [fileLabel, setFileLabel] = useState(t("backup.fileNotSelected"));
   const [status, setStatus] = useState<Status>(null);
 
   const handleDownload = async () => {
     setStatus(null);
+
     try {
-      const payload = await exportBackup();
+      const payload = await backupService.exportData();
       downloadJson(`FinBalance-backup-${Date.now()}.json`, payload);
-      setStatus({ type: "success", message: "Резервну копію успішно завантажено." });
+      setStatus({ type: "success", message: t("backup.successExport") });
     } catch {
-      setStatus({ type: "error", message: "Не вдалося створити резервну копію." });
+      setStatus({ type: "error", message: t("backup.errorExport") });
     }
   };
 
@@ -46,15 +50,15 @@ export default function BackupPage() {
       const text = await file.text();
       const parsed: unknown = JSON.parse(text);
 
-      if (!isBackupPayload(parsed)) {
-        setStatus({ type: "error", message: "Некоректний файл: це не резервна копія FinBalance." });
+      if (!backupService.isValidBackup(parsed)) {
+        setStatus({ type: "error", message: t("backup.errorInvalid") });
         return;
       }
 
-      await restoreBackup(parsed);
-      setStatus({ type: "success", message: "Дані успішно відновлено." });
+      await backupService.restoreData(parsed);
+      setStatus({ type: "success", message: t("backup.successRestore") });
     } catch {
-      setStatus({ type: "error", message: "Не вдалося відновити дані з файлу." });
+      setStatus({ type: "error", message: t("backup.errorRestore") });
     }
   };
 
@@ -67,44 +71,47 @@ export default function BackupPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Резервна копія</h1>
-        <p className="text-sm text-slate-500">
-          Експорт/імпорт даних FinBalance у форматі JSON (офлайн).
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          {t("backup.title")}
+        </h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          {t("backup.subtitle")}
         </p>
       </div>
 
       <Card className="p-5">
-        <h2 className="text-lg font-semibold">Відновити дані з файлу</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {t("backup.restoreTitle")}
+        </h2>
 
-        <div className="mt-3 flex flex-wrap items-center gap-3">
-          <Button variant="secondary">
+        <div className="mt-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+          <Button variant="secondary" className="w-full sm:w-auto">
             <label className="cursor-pointer">
-              Обрати файл
-              <input
-                hidden
-                type="file"
-                accept="application/json"
-                onChange={onFileChange}
-              />
+              {t("backup.chooseFile")}
+              <input hidden type="file" accept="application/json" onChange={onFileChange} />
             </label>
           </Button>
 
-          <span className="text-sm text-slate-500">{fileLabel}</span>
+          <span className="text-sm text-slate-500 dark:text-slate-400">{fileLabel}</span>
         </div>
 
-        <p className="mt-3 text-sm text-slate-500">
-          Увага: відновлення перезапише поточні рахунки, категорії, транзакції та налаштування.
+        <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">
+          {t("backup.warning")}
         </p>
       </Card>
 
       <Card className="p-5">
-        <h2 className="text-lg font-semibold">Створити резервну копію</h2>
-        <p className="mt-2 text-sm text-slate-500">
-          Завантаж один JSON-файл з усіма даними додатку.
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          {t("backup.createTitle")}
+        </h2>
+        <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+          {t("backup.createHint")}
         </p>
 
         <div className="mt-4">
-          <Button onClick={handleDownload}>Завантажити дані (JSON)</Button>
+          <Button className="w-full sm:w-auto" onClick={handleDownload}>
+            {t("backup.download")}
+          </Button>
         </div>
       </Card>
 
@@ -113,8 +120,8 @@ export default function BackupPage() {
           className={[
             "rounded-2xl border p-4 text-sm",
             status.type === "success"
-              ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-              : "border-rose-200 bg-rose-50 text-rose-800",
+              ? "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300"
+              : "border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-300",
           ].join(" ")}
         >
           {status.message}

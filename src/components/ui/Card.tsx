@@ -5,7 +5,13 @@ export default function Card({
   className = "",
 }: PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={["rounded-2xl border bg-white shadow-sm", className].join(" ")}>
+    <div
+      className={[
+        "rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-sm",
+        "dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100",
+        className,
+      ].join(" ")}
+    >
       {children}
     </div>
   );

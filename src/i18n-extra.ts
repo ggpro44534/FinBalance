@@ -1,0 +1,107 @@
+type Dictionary = Record<string, string>;
+
+export const extraUk: Dictionary = {
+  "nav.savings": "\u041d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043d\u044f",
+  "backup.warning":
+    "\u0423\u0432\u0430\u0433\u0430: \u0432\u0456\u0434\u043d\u043e\u0432\u043b\u0435\u043d\u043d\u044f \u043f\u0435\u0440\u0435\u0437\u0430\u043f\u0438\u0448\u0435 \u043f\u043e\u0442\u043e\u0447\u043d\u0456 \u0440\u0430\u0445\u0443\u043d\u043a\u0438, \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u0457, \u0442\u0440\u0430\u043d\u0437\u0430\u043a\u0446\u0456\u0457, \u043d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043d\u044f \u0442\u0430 \u043d\u0430\u043b\u0430\u0448\u0442\u0443\u0432\u0430\u043d\u043d\u044f.",
+  "savings.title": "\u041d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043d\u044f",
+  "savings.subtitle": "\u0426\u0456\u043b\u0456, \u043f\u0440\u043e\u0433\u0440\u0435\u0441 \u0456 \u0432\u0430\u0448\u0456 \u043c\u0430\u0439\u0431\u0443\u0442\u043d\u0456 \u043f\u043e\u043a\u0443\u043f\u043a\u0438.",
+  "savings.add": "\u0414\u043e\u0434\u0430\u0442\u0438 \u0446\u0456\u043b\u044c",
+  "savings.activeGoals": "\u0410\u043a\u0442\u0438\u0432\u043d\u0456 \u0446\u0456\u043b\u0456",
+  "savings.totalSaved": "\u0412\u0436\u0435 \u043d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043e",
+  "savings.totalTarget": "\u0417\u0430\u0433\u0430\u043b\u044c\u043d\u0430 \u0446\u0456\u043b\u044c",
+  "savings.targetDate": "\u0426\u0456\u043b\u044c\u043e\u0432\u0430 \u0434\u0430\u0442\u0430",
+  "savings.noTargetDate": "\u0411\u0435\u0437 \u0434\u0430\u0442\u0438",
+  "savings.progress": "\u041f\u0440\u043e\u0433\u0440\u0435\u0441",
+  "savings.saved": "\u041d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043e",
+  "savings.goal": "\u0426\u0456\u043b\u044c",
+  "savings.remaining": "\u0417\u0430\u043b\u0438\u0448\u0438\u043b\u043e\u0441\u044c",
+  "savings.addFunds": "\u0414\u043e\u0434\u0430\u0442\u0438 \u0432\u043d\u0435\u0441\u043e\u043a",
+  "savings.archive": "\u0412 \u0430\u0440\u0445\u0456\u0432",
+  "savings.archived": "\u0410\u0440\u0445\u0456\u0432\u043d\u0456 \u0446\u0456\u043b\u0456",
+  "savings.restore": "\u0412\u0456\u0434\u043d\u043e\u0432\u0438\u0442\u0438",
+  "savings.empty": "\u041f\u043e\u043a\u0438 \u0449\u0435 \u043d\u0435\u043c\u0430\u0454 \u0446\u0456\u043b\u0435\u0439 \u043d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043d\u044f.",
+  "savings.newGoal": "\u041d\u043e\u0432\u0430 \u0446\u0456\u043b\u044c",
+  "savings.editGoal": "\u0420\u0435\u0434\u0430\u0433\u0443\u0432\u0430\u0442\u0438 \u0446\u0456\u043b\u044c",
+  "savings.goalName": "\u041d\u0430\u0437\u0432\u0430 \u0446\u0456\u043b\u0456",
+  "savings.goalPlaceholder": "\u043d\u0430\u043f\u0440. \u041d\u043e\u0432\u0438\u0439 \u043d\u043e\u0443\u0442\u0431\u0443\u043a",
+  "savings.notePlaceholder": "\u043d\u0430\u043f\u0440. \u0434\u043e \u043b\u0456\u0442\u0430",
+  "savings.contributionAmount": "\u0421\u0443\u043c\u0430 \u0432\u043d\u0435\u0441\u043a\u0443",
+  "savings.contributionHint":
+    "\u0412\u0432\u0435\u0434\u0456\u0442\u044c \u0434\u043e\u0434\u0430\u0442\u043d\u0454 \u0447\u0438\u0441\u043b\u043e, \u0449\u043e\u0431 \u0434\u043e\u0434\u0430\u0442\u0438, \u0430\u0431\u043e \u0432\u0456\u0434\u2019\u0454\u043c\u043d\u0435 \u2014 \u0449\u043e\u0431 \u0437\u043c\u0435\u043d\u0448\u0438\u0442\u0438 \u0441\u0443\u043c\u0443.",
+  "savings.deleteConfirm":
+    "\u0412\u0438 \u0434\u0456\u0439\u0441\u043d\u043e \u0445\u043e\u0447\u0435\u0442\u0435 \u0432\u0438\u0434\u0430\u043b\u0438\u0442\u0438 \u0446\u044e \u0446\u0456\u043b\u044c \u043d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043d\u044f?",
+  "settings.baseCurrency": "\u041e\u0441\u043d\u043e\u0432\u043d\u0430 \u0432\u0430\u043b\u044e\u0442\u0430",
+  "settings.baseCurrencyHint":
+    "\u0423\u0441\u0456 \u0437\u0432\u0435\u0434\u0435\u043d\u0456 \u0441\u0443\u043c\u0438 \u0432 \u0434\u0430\u0448\u0431\u043e\u0440\u0434\u0456 \u0442\u0430 \u043d\u0430\u043a\u043e\u043f\u0438\u0447\u0435\u043d\u043d\u044f\u0445 \u0431\u0443\u0434\u0443\u0442\u044c \u043f\u0435\u0440\u0435\u0440\u0430\u0445\u043e\u0432\u0443\u0432\u0430\u0442\u0438\u0441\u044c \u0432 \u0446\u044e \u0432\u0430\u043b\u044e\u0442\u0443.",
+};
+
+export const extraEn: Dictionary = {
+  "nav.savings": "Savings",
+  "backup.warning":
+    "Warning: restoring will overwrite current accounts, categories, transactions, savings goals and settings.",
+  "savings.title": "Savings",
+  "savings.subtitle": "Goals, progress, and your future purchases.",
+  "savings.add": "Add goal",
+  "savings.activeGoals": "Active goals",
+  "savings.totalSaved": "Total saved",
+  "savings.totalTarget": "Total target",
+  "savings.targetDate": "Target date",
+  "savings.noTargetDate": "No date",
+  "savings.progress": "Progress",
+  "savings.saved": "Saved",
+  "savings.goal": "Goal",
+  "savings.remaining": "Remaining",
+  "savings.addFunds": "Add funds",
+  "savings.archive": "Archive",
+  "savings.archived": "Archived goals",
+  "savings.restore": "Restore",
+  "savings.empty": "There are no savings goals yet.",
+  "savings.newGoal": "New goal",
+  "savings.editGoal": "Edit goal",
+  "savings.goalName": "Goal name",
+  "savings.goalPlaceholder": "e.g. New laptop",
+  "savings.notePlaceholder": "e.g. before summer",
+  "savings.contributionAmount": "Contribution amount",
+  "savings.contributionHint":
+    "Enter a positive number to add funds, or a negative number to reduce the saved amount.",
+  "savings.deleteConfirm": "Do you really want to delete this savings goal?",
+  "settings.baseCurrency": "Main currency",
+  "settings.baseCurrencyHint":
+    "Dashboard and savings totals are converted into this currency.",
+};
+
+export const extraCs: Dictionary = {
+  "nav.savings": "Spo\u0159en\u00ed",
+  "backup.warning":
+    "Pozor: obnoven\u00ed p\u0159ep\u00ed\u0161e aktu\u00e1ln\u00ed \u00fa\u010dty, kategorie, transakce, spo\u0159en\u00ed a nastaven\u00ed.",
+  "savings.title": "Spo\u0159en\u00ed",
+  "savings.subtitle": "C\u00edle, pokrok a va\u0161e budouc\u00ed n\u00e1kupy.",
+  "savings.add": "P\u0159idat c\u00edl",
+  "savings.activeGoals": "Aktivn\u00ed c\u00edle",
+  "savings.totalSaved": "Naspo\u0159eno celkem",
+  "savings.totalTarget": "Celkov\u00fd c\u00edl",
+  "savings.targetDate": "C\u00edlov\u00e9 datum",
+  "savings.noTargetDate": "Bez data",
+  "savings.progress": "Pokrok",
+  "savings.saved": "Naspo\u0159eno",
+  "savings.goal": "C\u00edl",
+  "savings.remaining": "Zb\u00fdv\u00e1",
+  "savings.addFunds": "P\u0159idat vklad",
+  "savings.archive": "Archivovat",
+  "savings.archived": "Archivovan\u00e9 c\u00edle",
+  "savings.restore": "Obnovit",
+  "savings.empty": "Zat\u00edm tu nejsou \u017e\u00e1dn\u00e9 c\u00edle spo\u0159en\u00ed.",
+  "savings.newGoal": "Nov\u00fd c\u00edl",
+  "savings.editGoal": "Upravit c\u00edl",
+  "savings.goalName": "N\u00e1zev c\u00edle",
+  "savings.goalPlaceholder": "nap\u0159. Nov\u00fd notebook",
+  "savings.notePlaceholder": "nap\u0159. do l\u00e9ta",
+  "savings.contributionAmount": "V\u00fd\u0161e vkladu",
+  "savings.contributionHint":
+    "Zadejte kladn\u00e9 \u010d\u00edslo pro p\u0159id\u00e1n\u00ed pen\u011bz, nebo z\u00e1porn\u00e9 pro sn\u00ed\u017een\u00ed naspo\u0159en\u00e9 \u010d\u00e1stky.",
+  "savings.deleteConfirm": "Opravdu chcete smazat tento c\u00edl spo\u0159en\u00ed?",
+  "settings.baseCurrency": "Hlavn\u00ed m\u011bna",
+  "settings.baseCurrencyHint":
+    "Souhrny na dashboardu a ve spo\u0159en\u00ed se budou p\u0159epo\u010d\u00edt\u00e1vat do t\u00e9to m\u011bny.",
+};
