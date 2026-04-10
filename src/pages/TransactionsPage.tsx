@@ -8,7 +8,7 @@ import Select from "../components/ui/Select";
 import Modal from "../components/ui/Modal";
 
 import { useFinanceStore } from "../store/financeStore";
-import { financeService } from "../services/FinanceService";
+import { financeService } from "../services/financeService";
 import {
   transactionQueryService,
   type TransactionQueryParams,

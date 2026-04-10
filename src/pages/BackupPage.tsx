@@ -3,7 +3,7 @@ import type { ChangeEvent } from "react";
 
 import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
-import { backupService } from "../services/BackupService";
+import { backupService } from "../services/backupService";
 import { useI18n } from "../i18n";
 
 type Status = { type: "success" | "error"; message: string } | null;

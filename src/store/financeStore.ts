@@ -8,7 +8,7 @@ import { UserSettings } from "../models/Settings";
 import { SavingsGoal } from "../models/SavingsGoal";
 
 import { db } from "../db/appDatabase";
-import { financeService } from "../services/FinanceService";
+import { financeService } from "../services/financeService";
 
 type State = {
   loading: boolean;

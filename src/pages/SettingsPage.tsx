@@ -5,7 +5,7 @@ import Button from "../components/ui/Button";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
 
-import { financeService } from "../services/FinanceService";
+import { financeService } from "../services/financeService";
 import type {
   AppCurrency,
   DateFormat,

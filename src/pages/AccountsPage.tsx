@@ -8,7 +8,7 @@ import Select from "../components/ui/Select";
 import Modal from "../components/ui/Modal";
 
 import { useFinanceStore } from "../store/financeStore";
-import { financeService } from "../services/FinanceService";
+import { financeService } from "../services/financeService";
 import { statisticsService } from "../services/StatisticsService";
 import { formatCurrency } from "../lib/utils";
 import { useI18n } from "../i18n";

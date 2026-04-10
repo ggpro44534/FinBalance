@@ -9,7 +9,7 @@ import Modal from "../components/ui/Modal";
 import CategoryAppearancePicker from "../components/categories/CategoryAppearancePicker";
 
 import { useFinanceStore } from "../store/financeStore";
-import { financeService } from "../services/FinanceService";
+import { financeService } from "../services/financeService";
 import { useI18n } from "../i18n";
 
 import type { Category, CategoryKind, CategoryType } from "../models/Category";

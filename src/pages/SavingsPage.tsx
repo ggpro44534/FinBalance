@@ -9,7 +9,7 @@ import Select from "../components/ui/Select";
 import CategoryAppearancePicker from "../components/categories/CategoryAppearancePicker";
 
 import { useFinanceStore } from "../store/financeStore";
-import { financeService } from "../services/FinanceService";
+import { financeService } from "../services/financeService";
 import { useI18n } from "../i18n";
 import type { AppCurrency } from "../models/Settings";
 import {
