@@ -19,6 +19,7 @@ type PwaTranslations = {
   installAvailable: string;
   installHintIos: string;
   installHintUnavailable: string;
+  installHintOpenBrowser: string;
   install: string;
   update: string;
   close: string;
@@ -31,7 +32,9 @@ const pwaTranslations: Record<Language, PwaTranslations> = {
     installAvailable: "Доступна інсталяція додатку",
     installHintIos: "Safari: відкрийте меню Share і оберіть Add to Home Screen.",
     installHintUnavailable:
-      "Інсталяція стане доступною, коли браузер визначить додаток як PWA.",
+      "Браузер ще не дозволяє встановлення. Спробуйте відкрити сайт у Chrome або Safari.",
+    installHintOpenBrowser:
+      "У вбудованому браузері Telegram встановлення може не працювати. Відкрийте сайт у зовнішньому браузері.",
     install: "Встановити",
     update: "Оновити",
     close: "Закрити",
@@ -42,7 +45,9 @@ const pwaTranslations: Record<Language, PwaTranslations> = {
     installAvailable: "App installation is available",
     installHintIos: "Safari: open the Share menu and choose Add to Home Screen.",
     installHintUnavailable:
-      "Installation will appear when the browser recognizes the app as installable.",
+      "The browser does not allow installation yet. Try opening the site in Chrome or Safari.",
+    installHintOpenBrowser:
+      "Installation may not work inside Telegram's built-in browser. Open the site in an external browser.",
     install: "Install",
     update: "Update",
     close: "Close",
@@ -51,9 +56,11 @@ const pwaTranslations: Record<Language, PwaTranslations> = {
     updateAvailable: "Je dostupna nova verze",
     offlineMode: "Pracujete bez internetu",
     installAvailable: "Je dostupna instalace aplikace",
-    installHintIos: "V Safari otevrete nabidku Sdilet a zvolte Add to Home Screen.",
+    installHintIos: "V Safari otevrete nabidku Share a zvolte Add to Home Screen.",
     installHintUnavailable:
-      "Instalace bude dostupna, jakmile prohlizec rozpozna aplikaci jako PWA.",
+      "Prohlizec zatim neumoznuje instalaci. Zkuste web otevrit v Chrome nebo Safari.",
+    installHintOpenBrowser:
+      "Instalace nemusi fungovat ve vestavenem prohlizeci Telegramu. Otevrete web v externim prohlizeci.",
     install: "Instalovat",
     update: "Aktualizovat",
     close: "Zavrit",
@@ -69,8 +76,11 @@ function isStandaloneMode() {
 }
 
 function isIosDevice() {
-  const ua = window.navigator.userAgent;
-  return /iPad|iPhone|iPod/.test(ua);
+  return /iPad|iPhone|iPod/.test(window.navigator.userAgent);
+}
+
+function isTelegramBrowser() {
+  return /Telegram/i.test(window.navigator.userAgent);
 }
 
 function PwaStatus() {
@@ -87,7 +97,9 @@ function PwaStatus() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [isStandalone, setIsStandalone] = useState(isStandaloneMode);
   const [isInstallNoticeDismissed, setIsInstallNoticeDismissed] = useState(false);
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
   const isIos = useMemo(() => isIosDevice(), []);
+  const isTelegram = useMemo(() => isTelegramBrowser(), []);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(display-mode: standalone)");
@@ -98,22 +110,26 @@ function PwaStatus() {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
+      setShowInstallHelp(false);
       setIsInstallNoticeDismissed(false);
     };
 
     const handleAppInstalled = () => {
       setDeferredPrompt(null);
+      setShowInstallHelp(false);
       setIsStandalone(true);
       setIsInstallNoticeDismissed(false);
     };
 
     const handleOnline = () => {
       setIsOffline(false);
+      setShowInstallHelp(false);
       setIsInstallNoticeDismissed(false);
     };
 
     const handleOffline = () => {
       setIsOffline(true);
+      setShowInstallHelp(false);
       setIsInstallNoticeDismissed(false);
     };
 
@@ -140,24 +156,19 @@ function PwaStatus() {
   }, [language]);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) {
+    if (deferredPrompt) {
+      await deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      setDeferredPrompt(null);
+      setShowInstallHelp(false);
       return;
     }
 
-    await deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    setDeferredPrompt(null);
-    setIsInstallNoticeDismissed(false);
+    setShowInstallHelp(true);
   };
 
-  const showInstallButton =
-    isOffline && !isStandalone && deferredPrompt !== null && !isInstallNoticeDismissed;
-  const showInstallHint =
-    isOffline &&
-    !isStandalone &&
-    deferredPrompt === null &&
-    !needRefresh &&
-    !isInstallNoticeDismissed;
+  const showInstallCta =
+    isOffline && !isStandalone && !needRefresh && !isInstallNoticeDismissed;
   const showOfflineNotice = isOffline && !isInstallNoticeDismissed;
   const showStatus = needRefresh || showOfflineNotice;
 
@@ -167,9 +178,15 @@ function PwaStatus() {
 
   const statusMessage = needRefresh
     ? messages.updateAvailable
-    : showInstallButton || showInstallHint
+    : showInstallCta
       ? messages.installAvailable
       : messages.offlineMode;
+
+  const installHint = isTelegram
+    ? messages.installHintOpenBrowser
+    : isIos
+      ? messages.installHintIos
+      : messages.installHintUnavailable;
 
   return (
     <div className="fixed bottom-4 right-4 z-50 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
@@ -177,14 +194,14 @@ function PwaStatus() {
         {statusMessage}
       </div>
 
-      {showInstallHint && (
+      {showInstallHelp && (
         <div className="mt-2 text-xs text-slate-500 dark:text-slate-400">
-          {isIos ? messages.installHintIos : messages.installHintUnavailable}
+          {installHint}
         </div>
       )}
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {showInstallButton && !needRefresh && (
+        {showInstallCta && (
           <button
             className="rounded-xl bg-slate-900 px-3 py-2 text-sm text-white dark:bg-slate-100 dark:text-slate-900"
             onClick={handleInstall}
@@ -207,6 +224,7 @@ function PwaStatus() {
           onClick={() => {
             setOfflineReady(false);
             setNeedRefresh(false);
+            setShowInstallHelp(false);
             setIsInstallNoticeDismissed(true);
           }}
         >
