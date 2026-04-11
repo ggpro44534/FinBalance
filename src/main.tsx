@@ -1,4 +1,4 @@
-import { StrictMode, useEffect, useMemo, useState } from "react";
+import { StrictMode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
@@ -64,7 +64,24 @@ function PwaStatus() {
 
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [showOfflineNotice, setShowOfflineNotice] = useState(!navigator.onLine);
+  const offlineTimeoutRef = useRef<number | null>(null);
+
+  const clearOfflineTimeout = useCallback(() => {
+    if (offlineTimeoutRef.current !== null) {
+      window.clearTimeout(offlineTimeoutRef.current);
+      offlineTimeoutRef.current = null;
+    }
+  }, []);
+
+  const showOfflineStatusTemporarily = useCallback(() => {
+    setShowOfflineNotice(true);
+    clearOfflineTimeout();
+    offlineTimeoutRef.current = window.setTimeout(() => {
+      setShowOfflineNotice(false);
+      offlineTimeoutRef.current = null;
+    }, 5000);
+  }, [clearOfflineTimeout]);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
@@ -76,8 +93,13 @@ function PwaStatus() {
       setDeferredPrompt(null);
     };
 
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    const handleOnline = () => {
+      clearOfflineTimeout();
+      setShowOfflineNotice(false);
+    };
+    const handleOffline = () => {
+      showOfflineStatusTemporarily();
+    };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
     window.addEventListener("appinstalled", handleAppInstalled);
@@ -92,8 +114,9 @@ function PwaStatus() {
       window.removeEventListener("appinstalled", handleAppInstalled);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+      clearOfflineTimeout();
     };
-  }, []);
+  }, [clearOfflineTimeout, showOfflineStatusTemporarily]);
 
   const messages = useMemo(() => {
     return pwaTranslations[language] ?? pwaTranslations.uk;
@@ -110,7 +133,7 @@ function PwaStatus() {
   };
 
   const showStatus =
-    offlineReady || needRefresh || deferredPrompt !== null || !isOnline;
+    offlineReady || needRefresh || deferredPrompt !== null || showOfflineNotice;
 
   if (!showStatus) {
     return null;
@@ -120,12 +143,12 @@ function PwaStatus() {
     ? messages.updateAvailable
     : offlineReady
     ? messages.offlineReady
-    : !isOnline
+    : showOfflineNotice
     ? messages.offlineMode
     : messages.installAvailable;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-slate-200 bg-white p-4 shadow-lg dark:border-slate-800 dark:bg-slate-900">
+    <div className="fixed bottom-4 right-4 z-50 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
       <div className="text-sm text-slate-700 dark:text-slate-200">
         {statusMessage}
       </div>
@@ -154,6 +177,8 @@ function PwaStatus() {
           onClick={() => {
             setOfflineReady(false);
             setNeedRefresh(false);
+            clearOfflineTimeout();
+            setShowOfflineNotice(false);
           }}
         >
           {messages.close}

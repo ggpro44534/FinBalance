@@ -164,7 +164,7 @@ export default function CategoriesPage() {
             <div className="min-w-0">
               <div className="flex items-center gap-3">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl shadow-sm"
+                  className="flex h-12 w-12 items-center justify-center rounded-2xl text-2xl"
                   style={{ backgroundColor: `${group.color ?? "#94a3b8"}22` }}
                 >
                   {group.emoji ?? "📁"}
@@ -206,7 +206,7 @@ export default function CategoriesPage() {
                 key={subcategory.id}
                 type="button"
                 onClick={() => openEditCategory(subcategory)}
-                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-left text-sm text-slate-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-white dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-900"
+                className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/80 px-3 py-2 text-left text-sm text-slate-700 transition hover:-translate-y-0.5 hover:bg-white dark:border-slate-700 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-900"
               >
                 <span className="text-lg">{subcategory.emoji ?? "🏷️"}</span>
                 <span className="font-medium">

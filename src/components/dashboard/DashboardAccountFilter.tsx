@@ -29,7 +29,7 @@ export default function DashboardAccountFilter({
         onChange={(e: ChangeEvent<HTMLSelectElement>) =>
           onChange(e.target.value as DashboardAccountFilterType)
         }
-        className="w-full appearance-none rounded-full border-2 border-slate-300 bg-slate-50 px-5 py-3 pr-12 text-base text-slate-900 shadow-sm outline-none transition focus:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500"
+        className="w-full appearance-none rounded-full border-2 border-slate-300 bg-slate-50 px-5 py-3 pr-12 text-base text-slate-900 outline-none transition focus:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-slate-500"
       >
         <option value="all">{t("dashboard.filter.accounts.all")}</option>
         <option value="cash">{t("dashboard.filter.accounts.cash")}</option>

@@ -72,7 +72,7 @@ export default function CategoryAppearancePicker({
               key={presetColor}
               type="button"
               aria-label={presetColor}
-              className="h-9 w-9 rounded-full border-2 border-white shadow ring-1 ring-slate-200 transition hover:scale-105 dark:border-slate-900 dark:ring-slate-700"
+              className="h-9 w-9 rounded-full border-2 border-white ring-1 ring-slate-200 transition hover:scale-105 dark:border-slate-900 dark:ring-slate-700"
               style={{ backgroundColor: presetColor }}
               onClick={() => onColorChange(presetColor)}
             />
