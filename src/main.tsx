@@ -65,6 +65,7 @@ function PwaStatus() {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [showOfflineNotice, setShowOfflineNotice] = useState(!navigator.onLine);
+  const [isInstallNoticeDismissed, setIsInstallNoticeDismissed] = useState(false);
   const offlineTimeoutRef = useRef<number | null>(null);
 
   const clearOfflineTimeout = useCallback(() => {
@@ -76,6 +77,7 @@ function PwaStatus() {
 
   const showOfflineStatusTemporarily = useCallback(() => {
     setShowOfflineNotice(true);
+    setIsInstallNoticeDismissed(false);
     clearOfflineTimeout();
     offlineTimeoutRef.current = window.setTimeout(() => {
       setShowOfflineNotice(false);
@@ -87,15 +89,18 @@ function PwaStatus() {
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
       setDeferredPrompt(event as BeforeInstallPromptEvent);
+      setIsInstallNoticeDismissed(false);
     };
 
     const handleAppInstalled = () => {
       setDeferredPrompt(null);
+      setIsInstallNoticeDismissed(false);
     };
 
     const handleOnline = () => {
       clearOfflineTimeout();
       setShowOfflineNotice(false);
+      setIsInstallNoticeDismissed(false);
     };
     const handleOffline = () => {
       showOfflineStatusTemporarily();
@@ -130,10 +135,12 @@ function PwaStatus() {
     await deferredPrompt.prompt();
     await deferredPrompt.userChoice;
     setDeferredPrompt(null);
+    setIsInstallNoticeDismissed(false);
   };
 
-  const showStatus =
-    offlineReady || needRefresh || deferredPrompt !== null || showOfflineNotice;
+  const showInstallNotice =
+    showOfflineNotice && deferredPrompt !== null && !isInstallNoticeDismissed;
+  const showStatus = offlineReady || needRefresh || showOfflineNotice;
 
   if (!showStatus) {
     return null;
@@ -143,9 +150,9 @@ function PwaStatus() {
     ? messages.updateAvailable
     : offlineReady
     ? messages.offlineReady
-    : showOfflineNotice
-    ? messages.offlineMode
-    : messages.installAvailable;
+    : showInstallNotice
+    ? messages.installAvailable
+    : messages.offlineMode;
 
   return (
     <div className="fixed bottom-4 right-4 z-50 w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
@@ -154,7 +161,7 @@ function PwaStatus() {
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        {deferredPrompt && !needRefresh && (
+        {showInstallNotice && !needRefresh && (
           <button
             className="rounded-xl bg-slate-900 px-3 py-2 text-sm text-white dark:bg-slate-100 dark:text-slate-900"
             onClick={handleInstall}
@@ -179,6 +186,7 @@ function PwaStatus() {
             setNeedRefresh(false);
             clearOfflineTimeout();
             setShowOfflineNotice(false);
+            setIsInstallNoticeDismissed(true);
           }}
         >
           {messages.close}
