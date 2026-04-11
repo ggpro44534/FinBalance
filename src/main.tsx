@@ -1,4 +1,4 @@
-import { StrictMode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { StrictMode, useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
@@ -64,26 +64,8 @@ function PwaStatus() {
 
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
-  const [showOfflineNotice, setShowOfflineNotice] = useState(!navigator.onLine);
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [isInstallNoticeDismissed, setIsInstallNoticeDismissed] = useState(false);
-  const offlineTimeoutRef = useRef<number | null>(null);
-
-  const clearOfflineTimeout = useCallback(() => {
-    if (offlineTimeoutRef.current !== null) {
-      window.clearTimeout(offlineTimeoutRef.current);
-      offlineTimeoutRef.current = null;
-    }
-  }, []);
-
-  const showOfflineStatusTemporarily = useCallback(() => {
-    setShowOfflineNotice(true);
-    setIsInstallNoticeDismissed(false);
-    clearOfflineTimeout();
-    offlineTimeoutRef.current = window.setTimeout(() => {
-      setShowOfflineNotice(false);
-      offlineTimeoutRef.current = null;
-    }, 5000);
-  }, [clearOfflineTimeout]);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event: Event) => {
@@ -98,12 +80,12 @@ function PwaStatus() {
     };
 
     const handleOnline = () => {
-      clearOfflineTimeout();
-      setShowOfflineNotice(false);
+      setIsOffline(false);
       setIsInstallNoticeDismissed(false);
     };
     const handleOffline = () => {
-      showOfflineStatusTemporarily();
+      setIsOffline(true);
+      setIsInstallNoticeDismissed(false);
     };
 
     window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
@@ -119,9 +101,8 @@ function PwaStatus() {
       window.removeEventListener("appinstalled", handleAppInstalled);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
-      clearOfflineTimeout();
     };
-  }, [clearOfflineTimeout, showOfflineStatusTemporarily]);
+  }, []);
 
   const messages = useMemo(() => {
     return pwaTranslations[language] ?? pwaTranslations.uk;
@@ -139,7 +120,8 @@ function PwaStatus() {
   };
 
   const showInstallNotice =
-    showOfflineNotice && deferredPrompt !== null && !isInstallNoticeDismissed;
+    isOffline && deferredPrompt !== null && !isInstallNoticeDismissed;
+  const showOfflineNotice = isOffline && !isInstallNoticeDismissed;
   const showStatus = offlineReady || needRefresh || showOfflineNotice;
 
   if (!showStatus) {
@@ -184,8 +166,6 @@ function PwaStatus() {
           onClick={() => {
             setOfflineReady(false);
             setNeedRefresh(false);
-            clearOfflineTimeout();
-            setShowOfflineNotice(false);
             setIsInstallNoticeDismissed(true);
           }}
         >
