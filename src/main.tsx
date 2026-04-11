@@ -55,7 +55,7 @@ const pwaTranslations: Record<Language, PwaTranslations> = {
 
 function PwaStatus() {
   const {
-    offlineReady: [offlineReady, setOfflineReady],
+    offlineReady: [, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW();
@@ -122,7 +122,7 @@ function PwaStatus() {
   const showInstallNotice =
     isOffline && deferredPrompt !== null && !isInstallNoticeDismissed;
   const showOfflineNotice = isOffline && !isInstallNoticeDismissed;
-  const showStatus = offlineReady || needRefresh || showOfflineNotice;
+  const showStatus = needRefresh || showOfflineNotice;
 
   if (!showStatus) {
     return null;
@@ -130,8 +130,6 @@ function PwaStatus() {
 
   const statusMessage = needRefresh
     ? messages.updateAvailable
-    : offlineReady
-    ? messages.offlineReady
     : showInstallNotice
     ? messages.installAvailable
     : messages.offlineMode;
