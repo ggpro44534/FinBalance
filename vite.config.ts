@@ -12,6 +12,7 @@ export default defineConfig({
       registerType: "autoUpdate",
 
       manifest: {
+        id: "/",
         name: "FinBalance",
         short_name: "FinBalance",
         description: "Локальний PWA-додаток для ведення особистого бюджету",
